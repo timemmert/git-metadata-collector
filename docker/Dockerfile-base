@@ -1,0 +1,44 @@
+FROM python:3.9
+
+RUN apt-get -y update
+RUN apt-get -y upgrade
+
+RUN pip3 install --upgrade pip
+RUN pip3 install --upgrade setuptools
+RUN pip3 install --upgrade wheel
+
+RUN ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future
+RUN pip3 install --upgrade 'numpy>=1.17.5,<=1.18.3'
+
+#RUN sudo apt-get install python3-dev -y
+#RUN sudo apt-get install build-essential -y
+
+RUN pip3 install grimoirelab
+RUN pip3 install perceval
+RUN pip3 install graal
+RUN pip3 install lizard==1.16.6
+RUN pip3 install perceval>=0.9.6
+RUN pip3 install 'pylint>=1.8.4'
+RUN pip3 install 'flake8>=3.7.7'
+RUN pip3 install 'networkx>=2.1'
+RUN pip3 install 'pydot>=1.2.4'
+RUN pip3 install 'bandit>=1.4.0'
+RUN pip3 install 'grimoirelab-toolkit>=0.1.4'
+RUN pip3 install cloc
+RUN pip3 install scc
+
+RUN apt-get install cloc -y
+RUN apt-get install golang-go -y
+RUN go get -u github.com/boyter/scc/
+RUN apt-get install pkg-config libglib2.0-dev libjson-c-dev libpq-dev -y
+RUN git clone https://github.com/fossology/fossology
+RUN (cd fossology/src/nomos/agent && make -f Makefile.sa FO_LDFLAGS="-lglib-2.0 -lpq  -lglib-2.0 -ljson-c -lpthread -lrt")
+
+RUN git clone https://github.com/nexB/scancode-toolkit.git
+RUN (cd scancode-toolkit && git checkout -b test_scancli 96069fd84066c97549d54f66bd2fe8c7813c6b52)
+RUN pip3 install simplejson execnet
+RUN pip3 install kidash
+RUN pip3 install sortinghat
+RUN sortinghat --help
+RUN pip3 install manuscripts
+RUN pip3 install sirmordred
