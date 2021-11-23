@@ -1,11 +1,11 @@
 import json
 import os
 import tempfile
-from git import Repo
 
 import pytest
+from git import Repo
 
-from src.main import main, CLIArguments
+from src.main import CLIArguments, main
 
 
 @pytest.fixture
@@ -18,12 +18,7 @@ def percival_repo():
 @pytest.mark.integration
 def test_basic_dump(percival_repo):
     results_file = os.path.join(tempfile.mkdtemp(), "results.json")
-    main(
-        arguments=CLIArguments(
-            repo_path=percival_repo,
-            out_file=results_file
-        )
-    )
+    main(arguments=CLIArguments(repo_path=percival_repo, out_file=results_file))
 
     assert os.path.isfile(results_file)
     with open(results_file, "r") as fp:

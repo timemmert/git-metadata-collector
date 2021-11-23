@@ -1,11 +1,13 @@
 from __future__ import annotations
-import json
-import os
 
 import argparse
+import os
 from dataclasses import dataclass
 
+from graal.backends.core.cocom import CoCom
 from perceval.backends.core.git import Git
+
+from src.data_destination import dump_repo_to_elastic_search, dump_repo_to_json
 
 JSON_INDENT = 4
 
@@ -18,6 +20,7 @@ GITPATH_TMP = "/tmp/ppp"
 class CLIArguments:
     repo_path: str
     out_file: str
+    dump_to_elastic_search: bool = False
 
     @classmethod
     def from_parser(cls, parser: argparse.ArgumentParser) -> CLIArguments:
@@ -26,31 +29,35 @@ class CLIArguments:
         repo_path = args.repo_path
         assert os.path.isdir(repo_path)
 
-        out_file = args.out_file
-
         return cls(
             repo_path=repo_path,
-            out_file=out_file
+            out_file=args.out_file,
+            dump_to_elastic_search=args.dump_to_elastic_search,
         )
 
 
 def main(arguments: CLIArguments):
     repo = Git(uri=arguments.repo_path, gitpath=GITPATH_TMP)
-    commits = list(
-        map(lambda commit: commit["data"], list(repo.fetch()))
-    )
-    with open(arguments.out_file, "w") as fp:
-        json.dump(commits, fp, indent=JSON_INDENT)
+
+    dump_repo_to_json(out_file=arguments.out_file, repo=repo)
+
+    if arguments.dump_to_elastic_search:
+        dump_repo_to_elastic_search(repo=repo)
 
 
 def _build_arguments() -> CLIArguments:
-    parser = argparse.ArgumentParser(description='Git metadata analyzer arguments.')
+    parser = argparse.ArgumentParser(description="Git metadata analyzer arguments.")
     parser.add_argument("--repo-path", help="Path to the local repository.")
     parser.add_argument("--out-file", help="Output file name.", default=OUT_PATH)
+    parser.add_argument(
+        "--dump-to-elastic-search",
+        help="Should the output also be dumped to elastic search?",
+        default=False,
+    )
     arguments = CLIArguments.from_parser(parser=parser)
     return arguments
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = _build_arguments()
     main(arguments=args)

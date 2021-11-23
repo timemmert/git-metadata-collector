@@ -1,3 +1,5 @@
 cython
+cloc
+elasticsearch
 argparse
 grimoirelab
