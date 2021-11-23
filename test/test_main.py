@@ -8,7 +8,7 @@ import pytest
 from src.main import main, CLIArguments
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture
 def percival_repo():
     tmpdir = tempfile.mkdtemp()
     Repo.clone_from("https://github.com/grimoirelab/perceval.git", tmpdir)
