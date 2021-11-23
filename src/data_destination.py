@@ -3,7 +3,7 @@ from datetime import datetime
 
 import elasticsearch
 
-from src.main import JSON_INDENT
+JSON_INDENT = 4
 
 
 def dump_repo_to_json(out_file, repo):

@@ -5,7 +5,8 @@ import tempfile
 import pytest
 from git import Repo
 
-from src.main import CLIArguments, main
+from src.cli import CLIArguments
+from src.main import main
 
 
 @pytest.fixture
