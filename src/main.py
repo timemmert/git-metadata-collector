@@ -36,6 +36,18 @@ class CLIArguments:
         )
 
 
+def graal(arguments):
+    """ Does not work properly yet """
+    repo_uri = "https://github.com/grimoirelab/perceval.git"  # "http://github.com/chaoss/grimoirelab-graal"
+
+    repo_dir = "/tmp/graal-cocom"
+
+    cc = CoCom(uri=arguments.repo_path, git_path=repo_dir)
+
+    commits = [commit for commit in cc.fetch()]
+    print(commits)
+
+
 def main(arguments: CLIArguments):
     repo = Git(uri=arguments.repo_path, gitpath=GITPATH_TMP)
 
