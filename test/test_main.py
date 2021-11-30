@@ -6,7 +6,7 @@ import pytest
 from git import Repo
 
 from src.cli import CLIArguments
-from src.main import main
+from src.analyze_metadata import main
 
 
 @pytest.fixture
