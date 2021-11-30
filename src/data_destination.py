@@ -12,8 +12,8 @@ def dump_repo_to_json(out_file, repo):
         json.dump(commits, fp, indent=JSON_INDENT)
 
 
-def dump_repo_to_elastic_search(repo):
-    es = elasticsearch.Elasticsearch(["http://localhost:9200/"])
+def dump_repo_to_elastic_search(repo, host="localhost", port=9200):
+    es = elasticsearch.Elasticsearch([f"{host}:{port}"])
     es.indices.create("commits")
     for commit in repo.fetch():
         summary = {

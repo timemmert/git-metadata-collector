@@ -18,9 +18,11 @@ def percival_repo():
 
 @pytest.mark.integration
 def test_basic_dump(percival_repo):
-    results_file = os.path.join(tempfile.mkdtemp(), "results.json")
-    main(arguments=CLIArguments(repo_path=percival_repo, out_file=results_file))
+    results_folder = tempfile.mkdtemp()
+    main(arguments=CLIArguments(scan_path=percival_repo, out_folder=results_folder))
 
+    repo_name = percival_repo.replace(os.sep, "_")
+    results_file = os.path.join(results_folder, f"{repo_name}_metadata.json")
     assert os.path.isfile(results_file)
     with open(results_file, "r") as fp:
         assert json.load(fp)[0]["message"] == "Initial import"
