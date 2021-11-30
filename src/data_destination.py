@@ -17,6 +17,7 @@ def out_file_from_uri(out_folder: str, uri: str, identifier: str) -> str:
     out_file = os.path.join(out_folder, f"{repo_name}_{identifier}.json")
     return out_file
 
+
 def dump_metadata_to_json(repo: Git, out_file: str):
     commits = list(map(lambda commit: commit["data"], list(repo.fetch())))
     _dump_to_outfile_as_json(data=commits, out_file=out_file)
