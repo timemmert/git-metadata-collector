@@ -1,16 +1,17 @@
 import json
 import os
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional
 
-import elasticsearch
 from perceval.backends.core.git import Git
 from graal.backends.core.cocom import CoCom
 
 JSON_INDENT = 4
 
 
-def out_file_from_uri(out_folder: str, uri: str, identifier: str) -> str:
+def out_file_from_uri(out_folder: str, uri: str, identifier: str, scan_path: Optional[str] = None) -> str:
+    if scan_path is not None:
+        uri = uri[len(scan_path):]
     repo_name = uri.replace(os.sep, "_")
     if repo_name[0] == "_":
         repo_name = repo_name[1:]
@@ -34,6 +35,7 @@ def _dump_to_outfile_as_json(data: Any, out_file: str) -> None:
 
 
 def dump_metadata_to_elastic_search(repo, host="localhost", port=9200):
+    import elasticsearch
     es = elasticsearch.Elasticsearch([f"{host}:{port}"])
     es.indices.create("commits")
     for commit in repo.fetch():
